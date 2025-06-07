@@ -1,7 +1,7 @@
 <h1 align="center"> Tahira </h1> <br>
 <p align="center">
   <a href="https://gitpoint.co/">
-    <img alt="GitPoint" title="GitPoint" src="https://github.com/user-attachments/assets/4849d32a-4fa1-4246-a2a6-aba18a04336c" width="450">
+    <img alt="Tahira_logo" title="Tahira" src="https://github.com/user-attachments/assets/6ef71760-bd29-41b2-9c1f-27121ccb8537" width="450">
   </a>
 </p>
 
