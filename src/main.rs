@@ -1,7 +1,4 @@
-use axum::{
-    Router,
-    routing::{get, post},
-};
+use axum::{routing::get, Router};
 use sqlx::{Pool, Postgres};
 use tower_http::cors::{Any, CorsLayer};
 
@@ -29,8 +26,14 @@ async fn main() {
 
     let app: axum::Router = Router::new()
         .route("/tahira/api", get(root))
-        .route("/tahira/api/places", post(handlers::add_place))
-        .route("/tahira/api/localities", post(handlers::add_locality))
+        .route(
+            "/tahira/api/places",
+            get(handlers::get_places).post(handlers::add_place),
+        )
+        .route(
+            "/tahira/api/localities",
+            get(handlers::get_localities).post(handlers::add_locality),
+        )
         .layer(cors)
         .with_state(pool);
 

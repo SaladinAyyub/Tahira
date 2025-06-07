@@ -1,8 +1,8 @@
-use axum::{Json, extract::State, http::StatusCode};
-use serde_json::{Value, json};
+use axum::{extract::State, http::StatusCode, Json};
+use serde_json::{json, Value};
 use sqlx::PgPool;
 
-use crate::models::place::{NewLocality, NewPlace};
+use crate::models::place::{Locality, NewLocality, NewPlace, Place};
 
 pub async fn add_place(
     State(pool): State<PgPool>,
@@ -51,4 +51,34 @@ pub async fn add_locality(
                 )
             })?;
     Ok(Json(json!(locality)))
+}
+
+pub async fn get_places(
+    State(pool): State<PgPool>,
+) -> Result<Json<Vec<Place>>, (StatusCode, String)> {
+    let result = sqlx::query_as("SELECT * from places")
+        .fetch_all(&pool)
+        .await
+        .map_err(|err| {
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Error is {}", err),
+            )
+        })?;
+    Ok(Json(result))
+}
+
+pub async fn get_localities(
+    State(pool): State<PgPool>,
+) -> Result<Json<Vec<Locality>>, (StatusCode, String)> {
+    let result = sqlx::query_as("SELECT * from localities")
+        .fetch_all(&pool)
+        .await
+        .map_err(|err| {
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Error is {}", err),
+            )
+        })?;
+    Ok(Json(result))
 }
