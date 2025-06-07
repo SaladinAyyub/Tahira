@@ -2,11 +2,11 @@ use axum::{Json, extract::State, http::StatusCode};
 use serde_json::{Value, json};
 use sqlx::PgPool;
 
-use crate::models::place::{Locality, Place};
+use crate::models::place::{NewLocality, NewPlace};
 
 pub async fn add_place(
     State(pool): State<PgPool>,
-    Json(place): Json<Place>,
+    Json(place): Json<NewPlace>,
 ) -> Result<Json<Value>, (StatusCode, String)> {
     let _resp = sqlx::query("INSERT INTO places (name, image_url, halal_label, locality, address, recommended, place_description, label_description, map_url, mobile_number) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)")
         .bind(&place.name)
@@ -32,7 +32,7 @@ pub async fn add_place(
 
 pub async fn add_locality(
     State(pool): State<PgPool>,
-    Json(locality): Json<Locality>,
+    Json(locality): Json<NewLocality>,
 ) -> Result<Json<Value>, (StatusCode, String)> {
     let _resp =
         sqlx::query("INSERT INTO localities (name, country_code, city, latitude, longitude, locality_verifier) values ($1, $2, $3, $4, $5, $6)")

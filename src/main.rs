@@ -28,9 +28,9 @@ async fn main() {
     db::setup(&pool).await;
 
     let app: axum::Router = Router::new()
-        .route("/tahira-api", get(root))
-        .route("/tahira-api/api/places", post(handlers::add_place))
-        .route("/tahira-api/api/localities", post(handlers::add_locality))
+        .route("/tahira/api", get(root))
+        .route("/tahira/api/places", post(handlers::add_place))
+        .route("/tahira/api/localities", post(handlers::add_locality))
         .layer(cors)
         .with_state(pool);
 

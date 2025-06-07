@@ -2,8 +2,7 @@ use crate::models::enums::{City, Rating};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, sqlx::FromRow)]
-pub struct Place {
-    pub id: i32,
+pub struct NewPlace {
     pub name: String,
     pub image_url: String,
     pub halal_label: Rating,
@@ -17,8 +16,7 @@ pub struct Place {
 }
 
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
-pub struct Locality {
-    pub id: i32,
+pub struct NewLocality {
     pub name: String,
     pub country_code: String,
     pub city: City,

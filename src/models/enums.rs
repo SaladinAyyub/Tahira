@@ -14,7 +14,7 @@ pub enum Rating {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Type, EnumString, Display)]
-#[sqlx(type_name = "rating")] // matches Postgres ENUM type
+#[sqlx(type_name = "city")] // matches Postgres ENUM type
 #[sqlx(rename_all = "PascalCase")] // matches values like "Gold", "Silver", etc.
 #[serde(rename_all = "PascalCase")] // so JSON serializes to "Gold", "Silver", etc.
 pub enum City {
