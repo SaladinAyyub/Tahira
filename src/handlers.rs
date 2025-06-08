@@ -148,3 +148,57 @@ pub async fn delete_locality_by_id(
         })?;
     Ok(Json(json!({"msg": "Locality deleted successfully"})))
 }
+
+pub async fn update_place_by_id(
+    State(pool): State<PgPool>,
+    Path(id): Path<i32>,
+    Json(place): Json<Place>,
+) -> Result<Json<Value>, (StatusCode, String)> {
+    let _result = sqlx::query("UPDATE places set name=$1, image_url=$2, halal_label=$3, locality_id=$4, address=$5, recommended=$6, place_description=$7, label_description=$8, map_url=$9, mobile_number=$10 WHERE id=$11")
+        .bind(&place.name)
+        .bind(&place.image_url)
+        .bind(&place.halal_label)
+        .bind(place.locality_id)
+        .bind(&place.address)
+        .bind(place.recommended)
+        .bind(&place.place_description)
+        .bind(&place.label_description)
+        .bind(&place.map_url)
+        .bind(&place.mobile_number)
+        .bind(id)
+        .execute(&pool)
+        .await
+        .map_err(|err| match err {
+            sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND, format!("Error is {}", err)),
+            _ => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Error is {}", err),
+            ),
+        })?;
+    Ok(Json(json!({"msg": "Place updated successfully"})))
+}
+
+pub async fn update_locality_by_id(
+    State(pool): State<PgPool>,
+    Path(id): Path<i32>,
+    Json(locality): Json<Locality>,
+) -> Result<Json<Value>, (StatusCode, String)> {
+    let _result = sqlx::query("UPDATE localities set name=$1, country_code=$2, city=$3, latitude=$4, longitude=$5, locality_verifier=$6 WHERE id = $7")
+        .bind(&locality.name)
+        .bind(&locality.country_code)
+        .bind(&locality.city)
+        .bind(locality.latitude)
+        .bind(locality.longitude)
+        .bind(&locality.locality_verifier)
+        .bind(id)
+        .execute(&pool)
+        .await
+        .map_err(|err| match err {
+            sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND, format!("Error is {}", err)),
+            _ => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Error is {}", err),
+            ),
+        })?;
+    Ok(Json(json!({"msg": "Locality updated successfully"})))
+}
