@@ -3,9 +3,9 @@ use yew::prelude::*;
 #[function_component]
 fn App() -> Html {
     html! {
-        <div>
+        <main>
             <h1>{"Tahira"}</h1>
-        </div>
+        </main>
     }
 }
 
