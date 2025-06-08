@@ -48,7 +48,7 @@ async fn create_places_table_if_not_exists(pool: &PgPool) {
           recommended bool NOT NULL,
           place_description text,
           label_description text NOT NULL,
-          map_url text NOT NULL,
+          map_url text,
           mobile_number text
         );"#,
     )
