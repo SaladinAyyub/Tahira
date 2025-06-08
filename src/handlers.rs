@@ -1,5 +1,9 @@
-use axum::{extract::State, http::StatusCode, Json};
-use serde_json::{json, Value};
+use axum::{
+    Json,
+    extract::{Path, State},
+    http::StatusCode,
+};
+use serde_json::{Value, json};
 use sqlx::PgPool;
 
 use crate::models::place::{Locality, NewLocality, NewPlace, Place};
@@ -8,7 +12,7 @@ pub async fn add_place(
     State(pool): State<PgPool>,
     Json(place): Json<NewPlace>,
 ) -> Result<Json<Value>, (StatusCode, String)> {
-    let _resp = sqlx::query("INSERT INTO places (name, image_url, halal_label, locality, address, recommended, place_description, label_description, map_url, mobile_number) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)")
+    let _resp = sqlx::query("INSERT INTO places (name, image_url, halal_label, locality_id, address, recommended, place_description, label_description, map_url, mobile_number) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)")
         .bind(&place.name)
         .bind(&place.image_url)
         .bind(&place.halal_label)
@@ -80,5 +84,31 @@ pub async fn get_localities(
                 format!("Error is {}", err),
             )
         })?;
+    Ok(Json(result))
+}
+
+pub async fn get_place_from_id(
+    State(pool): State<PgPool>,
+    Path(id): Path<i32>,
+) -> Result<Json<Place>, (StatusCode, String)> {
+    let result = sqlx::query_as(
+        "SELECT id, name, image_url, halal_label,locality_id, address, recommended, place_description, label_description, map_url, mobile_number FROM places WHERE id = $1",
+    ).bind(id).fetch_one(&pool).await.map_err(|err| match err {
+        sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND, format!("Error is {}", err)),
+            _ => (StatusCode::INTERNAL_SERVER_ERROR, format!("Error is {}", err))
+    })?;
+    Ok(Json(result))
+}
+
+pub async fn get_places_from_locality_id(
+    State(pool): State<PgPool>,
+    Path(locality_id): Path<i32>,
+) -> Result<Json<Vec<Place>>, (StatusCode, String)> {
+    let result = sqlx::query_as(
+        "SELECT id, name, image_url, halal_label,locality, address, recommended, place_description, label_description, map_url, mobile_number FROM places WHERE locality_id = $1",
+    ).bind(locality_id).fetch_all(&pool).await.map_err(|err| match err {
+        sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND, format!("Error is {}", err)),
+            _ => (StatusCode::INTERNAL_SERVER_ERROR, format!("Error is {}", err))
+    })?;
     Ok(Json(result))
 }
