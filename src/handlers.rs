@@ -1,9 +1,9 @@
 use axum::{
-    Json,
     extract::{Path, State},
     http::StatusCode,
+    Json,
 };
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use sqlx::PgPool;
 
 use crate::models::place::{Locality, NewLocality, NewPlace, Place};
@@ -93,6 +93,19 @@ pub async fn get_place_from_id(
 ) -> Result<Json<Place>, (StatusCode, String)> {
     let result = sqlx::query_as(
         "SELECT id, name, image_url, halal_label,locality_id, address, recommended, place_description, label_description, map_url, mobile_number FROM places WHERE id = $1",
+    ).bind(id).fetch_one(&pool).await.map_err(|err| match err {
+        sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND, format!("Error is {}", err)),
+            _ => (StatusCode::INTERNAL_SERVER_ERROR, format!("Error is {}", err))
+    })?;
+    Ok(Json(result))
+}
+
+pub async fn get_locality_from_id(
+    State(pool): State<PgPool>,
+    Path(id): Path<i32>,
+) -> Result<Json<Locality>, (StatusCode, String)> {
+    let result = sqlx::query_as(
+        "SELECT id, name, country_code, city, latitude, longitude, locality_verifier FROM localities WHERE id = $1",
     ).bind(id).fetch_one(&pool).await.map_err(|err| match err {
         sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND, format!("Error is {}", err)),
             _ => (StatusCode::INTERNAL_SERVER_ERROR, format!("Error is {}", err))

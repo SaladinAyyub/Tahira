@@ -1,4 +1,4 @@
-use axum::{Router, routing::get};
+use axum::{routing::get, Router};
 use sqlx::{Pool, Postgres};
 use tower_http::cors::{Any, CorsLayer};
 
@@ -35,6 +35,10 @@ async fn main() {
             get(handlers::get_localities).post(handlers::add_locality),
         )
         .route("/tahira/api/places/:id", get(handlers::get_place_from_id))
+        .route(
+            "/tahira/api/localities/:id",
+            get(handlers::get_locality_from_id),
+        )
         .route(
             "/tahira/api/places/:locality_id",
             get(handlers::get_places_from_locality_id),
