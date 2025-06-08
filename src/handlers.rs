@@ -112,3 +112,39 @@ pub async fn get_locality_by_id(
     })?;
     Ok(Json(result))
 }
+
+pub async fn delete_place_by_id(
+    State(pool): State<PgPool>,
+    Path(id): Path<i32>,
+) -> Result<Json<Value>, (StatusCode, String)> {
+    let _result = sqlx::query("DELETE FROM places WHERE id = $1")
+        .bind(id)
+        .execute(&pool)
+        .await
+        .map_err(|err| match err {
+            sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND, format!("Error is {}", err)),
+            _ => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Error is {}", err),
+            ),
+        })?;
+    Ok(Json(json!({"msg": "Place deleted successfully"})))
+}
+
+pub async fn delete_locality_by_id(
+    State(pool): State<PgPool>,
+    Path(id): Path<i32>,
+) -> Result<Json<Value>, (StatusCode, String)> {
+    let _result = sqlx::query("DELETE FROM localities WHERE id = $1")
+        .bind(id)
+        .execute(&pool)
+        .await
+        .map_err(|err| match err {
+            sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND, format!("Error is {}", err)),
+            _ => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Error is {}", err),
+            ),
+        })?;
+    Ok(Json(json!({"msg": "Locality deleted successfully"})))
+}

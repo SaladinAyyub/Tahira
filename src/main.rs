@@ -34,10 +34,13 @@ async fn main() {
             "/tahira/api/localities",
             get(handlers::get_localities).post(handlers::add_locality),
         )
-        .route("/tahira/api/places/{id}", get(handlers::get_place_by_id))
+        .route(
+            "/tahira/api/places/{id}",
+            get(handlers::get_place_by_id).delete(handlers::delete_place_by_id),
+        )
         .route(
             "/tahira/api/localities/{id}",
-            get(handlers::get_locality_by_id),
+            get(handlers::get_locality_by_id).delete(handlers::delete_locality_by_id),
         )
         .layer(cors)
         .with_state(pool);
