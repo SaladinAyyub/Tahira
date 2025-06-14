@@ -23,6 +23,7 @@ pub async fn add_place(
         .bind(&place.label_description)
         .bind(&place.map_url)
         .bind(&place.mobile_number)
+        .bind(&place.place_type)
         .execute(&pool)
         .await
         .map_err(|err| {

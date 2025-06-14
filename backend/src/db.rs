@@ -15,9 +15,13 @@ pub async fn setup(pool: &PgPool) {
         .await
         .unwrap();
 
-    create_enum_type_if_not_exists(pool, "spot_type", &["Restaurant, Hotel, Meatshop, Street"])
-        .await
-        .unwrap();
+    create_enum_type_if_not_exists(
+        pool,
+        "spot_type",
+        &["Restaurant", "Hotel", "Meatshop", "Street"],
+    )
+    .await
+    .unwrap();
 
     create_localities_table_if_not_exists(pool).await;
     create_places_table_if_not_exists(pool).await;
