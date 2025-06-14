@@ -1,7 +1,8 @@
 use crate::models::enums::{Rating, SpotType};
+use serde::Deserialize;
 use yew::prelude::*;
 
-#[derive(Properties, PartialEq, Clone)]
+#[derive(Properties, PartialEq, Clone, Deserialize)]
 pub struct PlaceCardProps {
     pub id: i32,
     pub name: String,
