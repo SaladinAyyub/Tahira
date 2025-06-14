@@ -30,4 +30,5 @@ pub enum SpotType {
     Restaurant,
     Hotel,
     Meatshop,
+    Street,
 }
