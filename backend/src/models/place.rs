@@ -1,4 +1,4 @@
-use crate::models::enums::{City, Rating};
+use crate::models::enums::{City, Rating, SpotType};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, sqlx::FromRow)]
@@ -13,6 +13,7 @@ pub struct NewPlace {
     pub label_description: String,
     pub map_url: String,
     pub mobile_number: String,
+    pub place_type: SpotType,
 }
 
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
@@ -38,6 +39,7 @@ pub struct Place {
     pub label_description: String,
     pub map_url: String,
     pub mobile_number: String,
+    pub place_type: SpotType,
 }
 
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]

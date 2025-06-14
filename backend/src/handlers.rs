@@ -12,7 +12,7 @@ pub async fn add_place(
     State(pool): State<PgPool>,
     Json(place): Json<NewPlace>,
 ) -> Result<Json<Value>, (StatusCode, String)> {
-    let _resp = sqlx::query("INSERT INTO places (name, image_url, halal_label, locality_id, address, recommended, place_description, label_description, map_url, mobile_number) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)")
+    let _resp = sqlx::query("INSERT INTO places (name, image_url, halal_label, locality_id, address, recommended, place_description, label_description, map_url, mobile_number, place_type) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)")
         .bind(&place.name)
         .bind(&place.image_url)
         .bind(&place.halal_label)
@@ -92,7 +92,7 @@ pub async fn get_place_by_id(
     Path(id): Path<i32>,
 ) -> Result<Json<Place>, (StatusCode, String)> {
     let result = sqlx::query_as(
-        "SELECT id, name, image_url, halal_label,locality_id, address, recommended, place_description, label_description, map_url, mobile_number FROM places WHERE id = $1",
+        "SELECT id, name, image_url, halal_label,locality_id, address, recommended, place_description, label_description, map_url, mobile_number, place_type FROM places WHERE id = $1",
     ).bind(id).fetch_one(&pool).await.map_err(|err| match err {
         sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND, format!("Error is {}", err)),
             _ => (StatusCode::INTERNAL_SERVER_ERROR, format!("Error is {}", err))
@@ -154,7 +154,7 @@ pub async fn update_place_by_id(
     Path(id): Path<i32>,
     Json(place): Json<Place>,
 ) -> Result<Json<Value>, (StatusCode, String)> {
-    let _result = sqlx::query("UPDATE places set name=$1, image_url=$2, halal_label=$3, locality_id=$4, address=$5, recommended=$6, place_description=$7, label_description=$8, map_url=$9, mobile_number=$10 WHERE id=$11")
+    let _result = sqlx::query("UPDATE places set name=$1, image_url=$2, halal_label=$3, locality_id=$4, address=$5, recommended=$6, place_description=$7, label_description=$8, map_url=$9, mobile_number=$10, place_type=$11 WHERE id=$12")
         .bind(&place.name)
         .bind(&place.image_url)
         .bind(&place.halal_label)
